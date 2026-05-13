@@ -19,6 +19,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Thư viện chụp ảnh HTML sang Canvas (Phục vụ chia sẻ ảnh) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
         /* Custom styles for printing */
         @media print {
@@ -276,14 +279,15 @@
                     <button onclick="handleSaveReadings()" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-colors">
                         <i data-lucide="save" class="w-5 h-5"></i> Lưu chỉ số mới
                     </button>
-                    <button onclick="handlePrintInvoice()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg transition-colors">
-                        <i data-lucide="printer" class="w-5 h-5"></i> In Hoá Đơn
+                    <!-- Nút chia sẻ ảnh -->
+                    <button id="btn-share-invoice" onclick="handleShareInvoice()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg transition-colors">
+                        <i data-lucide="share-2" class="w-5 h-5"></i> Chia sẻ
                     </button>
                 </div>
             </div>
 
-            <!-- Khu vực Xem trước / Hoá đơn để In -->
-            <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200 print:shadow-none print:border-none print:p-0 max-w-2xl mx-auto">
+            <!-- Khu vực Xem trước / Hoá đơn để Chụp ảnh/In (Cần gắn id='invoice-receipt') -->
+            <div id="invoice-receipt" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200 print:shadow-none print:border-none print:p-0 max-w-2xl mx-auto">
                 <div class="text-center mb-6">
                     <h1 class="text-2xl font-bold text-slate-900 uppercase tracking-wide">Hoá Đơn Tiền Phòng</h1>
                     <p class="text-slate-600 mt-1 font-medium">Kỳ thu: <span id="rcpt-month"></span></p>
@@ -998,7 +1002,7 @@
             showToast("Đã lưu chỉ số mới thành chỉ số cũ cho tháng sau!", true);
         }
 
-        function handlePrintInvoice() {
+        async function handleShareInvoice() {
             if(!window.currentInvoiceData) return;
 
             const room = rooms.find(r => r.id === currentRoomId);
@@ -1020,7 +1024,6 @@
                 total: window.currentInvoiceData.total
             };
 
-            // Nếu đã từng xuất trong tháng này thì ghi đè, nếu chưa thì thêm mới
             if (historyIdx >= 0) {
                 room.invoiceHistory[historyIdx] = invoiceRecord;
             } else {
@@ -1030,7 +1033,58 @@
             // Tự động lưu lên Google Sheets
             saveToSheets();
 
-            window.print();
+            // 3. Chụp ảnh hoá đơn và chia sẻ
+            const invoiceElement = document.getElementById('invoice-receipt');
+            const btnShare = document.getElementById('btn-share-invoice');
+            const originalText = btnShare.innerHTML;
+            
+            try {
+                // Hiển thị trạng thái đang xử lý
+                btnShare.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Đang tạo ảnh...`;
+                lucide.createIcons();
+
+                const canvas = await html2canvas(invoiceElement, {
+                    scale: 2, // Tăng độ nét của ảnh
+                    backgroundColor: '#ffffff'
+                });
+
+                canvas.toBlob(async (blob) => {
+                    const fileName = `HoaDon_${room.name.replace(/\s+/g, '')}_Thang${window.currentInvoiceData.month.replace('/', '_')}.png`;
+                    const file = new File([blob], fileName, { type: 'image/png' });
+                    
+                    // Kiểm tra xem thiết bị có hỗ trợ tính năng chia sẻ file native (Web Share API) hay không
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        try {
+                            await navigator.share({
+                                title: `Hoá đơn ${room.name}`,
+                                text: `Gửi bạn hoá đơn tiền phòng tháng ${window.currentInvoiceData.month}.`,
+                                files: [file]
+                            });
+                            showToast("Đã mở chia sẻ thành công!", true);
+                        } catch (err) {
+                            // Người dùng có thể huỷ thao tác chia sẻ
+                            console.error('Chia sẻ bị huỷ hoặc lỗi:', err);
+                        }
+                    } else {
+                        // Trình duyệt web trên máy tính hoặc không hỗ trợ -> Tự động tải ảnh xuống máy
+                        const link = document.createElement('a');
+                        link.download = fileName;
+                        link.href = URL.createObjectURL(blob);
+                        link.click();
+                        showToast("Thiết bị không hỗ trợ gửi trực tiếp. Đã tải ảnh xuống máy!", true);
+                    }
+                    
+                    // Trả lại nút như cũ
+                    btnShare.innerHTML = originalText;
+                    lucide.createIcons();
+                }, 'image/png');
+                
+            } catch (error) {
+                console.error("Lỗi khi tạo ảnh hoá đơn:", error);
+                showToast("Lỗi khi tạo ảnh hoá đơn.", false);
+                btnShare.innerHTML = originalText;
+                lucide.createIcons();
+            }
         }
 
         function initApp() {
