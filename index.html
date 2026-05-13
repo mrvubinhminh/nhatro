@@ -51,11 +51,14 @@
                         <button onclick="switchTab('overview')" id="btn-tab-overview" class="px-3 sm:px-4 py-1.5 rounded-md font-medium text-sm transition-colors flex items-center gap-2 bg-white shadow-sm text-indigo-700">
                             <i data-lucide="layout-dashboard" class="w-4 h-4"></i> <span class="hidden sm:inline">Tổng quan</span>
                         </button>
+                        <button onclick="switchTab('statistics')" id="btn-tab-statistics" class="px-3 sm:px-4 py-1.5 rounded-md font-medium text-sm transition-colors flex items-center gap-2 text-slate-600 hover:text-slate-900">
+                            <i data-lucide="bar-chart-3" class="w-4 h-4"></i> <span class="hidden sm:inline">Thống kê</span>
+                        </button>
                         <button onclick="switchTab('tenants')" id="btn-tab-tenants" class="px-3 sm:px-4 py-1.5 rounded-md font-medium text-sm transition-colors flex items-center gap-2 text-slate-600 hover:text-slate-900">
                             <i data-lucide="users" class="w-4 h-4"></i> <span class="hidden sm:inline">Khách thuê</span>
                         </button>
                         <button onclick="switchTab('settings')" id="btn-tab-settings" class="px-3 sm:px-4 py-1.5 rounded-md font-medium text-sm transition-colors flex items-center gap-2 text-slate-600 hover:text-slate-900">
-                            <i data-lucide="settings" class="w-4 h-4"></i> <span class="hidden sm:inline">Cài đặt giá</span>
+                            <i data-lucide="settings" class="w-4 h-4"></i> <span class="hidden sm:inline">Cài đặt</span>
                         </button>
                         <button onclick="switchTab('invoice')" id="btn-tab-invoice" class="px-3 sm:px-4 py-1.5 rounded-md font-medium text-sm transition-colors flex items-center gap-2 text-slate-600 hover:text-slate-900">
                             <i data-lucide="file-text" class="w-4 h-4"></i> <span class="hidden sm:inline">Hoá đơn</span>
@@ -81,6 +84,74 @@
             </h2>
             <div id="overview-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Data filled by JS -->
+            </div>
+        </div>
+
+        <!-- TAB: THỐNG KÊ -->
+        <div id="tab-statistics" class="tab-content print-hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <i data-lucide="bar-chart-3" class="text-indigo-600"></i> Thống kê theo tháng
+                </h2>
+                <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm">
+                    <label class="text-sm font-medium text-slate-700">Chọn kỳ thu:</label>
+                    <select id="stat-month-select" onchange="updateStatistics()" class="border-none bg-transparent outline-none font-bold text-indigo-700 cursor-pointer">
+                        <!-- Options filled via JS -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Tổng hợp Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+                        <i data-lucide="banknote" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500">Tổng doanh thu</p>
+                        <h3 id="stat-total-revenue" class="text-2xl font-bold text-slate-800">0 ₫</h3>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
+                    <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">
+                        <i data-lucide="zap" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500">Tổng số điện tiêu thụ</p>
+                        <h3 id="stat-total-elec" class="text-2xl font-bold text-slate-800">0 kWh</h3>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                        <i data-lucide="droplets" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500">Tổng nước tiêu thụ</p>
+                        <h3 id="stat-total-water" class="text-2xl font-bold text-slate-800">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chi tiết từng phòng -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
+                <div class="px-6 py-4 bg-slate-50 border-b border-slate-200">
+                    <h3 class="font-bold text-slate-800">Chi tiết theo phòng</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-sm">
+                                <th class="py-3 px-6 font-semibold text-slate-600">Phòng</th>
+                                <th class="py-3 px-6 font-semibold text-slate-600 text-center">Số điện (kWh)</th>
+                                <th class="py-3 px-6 font-semibold text-slate-600 text-center">Số nước</th>
+                                <th class="py-3 px-6 font-semibold text-slate-600 text-right">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stat-table-body" class="divide-y divide-slate-100">
+                            <!-- Data filled via JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -114,11 +185,17 @@
                     <i data-lucide="file-text" class="text-emerald-600"></i> Tạo hoá đơn mới
                 </h2>
                 
-                <div class="mb-6 space-y-1">
-                    <label class="text-sm font-medium text-slate-700">Chọn phòng</label>
-                    <select id="inv-room-select" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium text-lg">
-                        <!-- Options filled via JS -->
-                    </select>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                    <div class="space-y-1">
+                        <label class="text-sm font-medium text-slate-700">Chọn phòng</label>
+                        <select id="inv-room-select" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium text-lg">
+                            <!-- Options filled via JS -->
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-sm font-medium text-slate-700">Kỳ thu (Tháng/Năm)</label>
+                        <input type="month" id="inv-month" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-lg font-medium" />
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 border-t border-slate-100 pt-6">
@@ -195,7 +272,7 @@
             <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200 print:shadow-none print:border-none print:p-0 max-w-2xl mx-auto">
                 <div class="text-center mb-6">
                     <h1 class="text-2xl font-bold text-slate-900 uppercase tracking-wide">Hoá Đơn Tiền Phòng</h1>
-                    <p class="text-slate-600 mt-1 font-medium">Tháng <span id="rcpt-month"></span></p>
+                    <p class="text-slate-600 mt-1 font-medium">Kỳ thu: <span id="rcpt-month"></span></p>
                 </div>
 
                 <div class="flex justify-between items-end border-b-2 border-slate-800 pb-3 mb-4">
@@ -304,6 +381,7 @@
             name: `Phòng ${i + 1}`,
             tenant: { name: '', peopleCount: 1, phone: '', address: '', cccd: '', notes: '', moveInDate: '', image: '' },
             lastInvoiceDate: '',
+            invoiceHistory: [], // Lưu trữ lịch sử xuất hoá đơn
             settings: {
                 rent: i === 0 ? 1700000 : 1500000,
                 elecPrice: 3500,
@@ -324,6 +402,9 @@
             prevElec: 0, currElec: 0, prevWater: 0, currWater: 0
         };
 
+        // Cache cho invoice data tạm thời
+        window.currentInvoiceData = null;
+
         // --- UTILS ---
         const formatCurrency = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
         const formatDateVN = (dateString) => {
@@ -339,11 +420,12 @@
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getRooms`);
                 const data = await response.json();
                 if (data && data.length > 0) {
-                    // Merge fields in case old data doesn't have image/moveInDate
+                    // Merge fields in case old data doesn't have image/moveInDate/invoiceHistory
                     rooms = data.map(r => ({
                         ...r,
                         tenant: { image: '', moveInDate: '', ...r.tenant },
-                        lastInvoiceDate: r.lastInvoiceDate || ''
+                        lastInvoiceDate: r.lastInvoiceDate || '',
+                        invoiceHistory: r.invoiceHistory || []
                     }));
                 }
             } catch (error) {
@@ -403,11 +485,12 @@
             document.getElementById(`tab-${tabId}`).classList.add('active');
 
             // Cập nhật Nav Buttons
-            ['overview', 'tenants', 'settings', 'invoice'].forEach(t => {
+            ['overview', 'statistics', 'tenants', 'settings', 'invoice'].forEach(t => {
                 const btn = document.getElementById(`btn-tab-${t}`);
+                if(!btn) return;
                 btn.classList.remove('bg-white', 'shadow-sm', 'text-indigo-700', 'text-blue-700', 'text-emerald-700');
                 if(t === tabId) {
-                    let colorClass = 'text-indigo-700'; // Default for settings & overview
+                    let colorClass = 'text-indigo-700'; // Default for settings & overview & statistics
                     if(t === 'tenants') colorClass = 'text-blue-700';
                     if(t === 'invoice') colorClass = 'text-emerald-700';
                     btn.classList.add('bg-white', 'shadow-sm', colorClass);
@@ -419,6 +502,7 @@
 
             // Render lại dữ liệu cho tab tương ứng
             if (tabId === 'overview') renderOverview();
+            if (tabId === 'statistics') renderStatistics();
             if (tabId === 'tenants') renderTenants();
             if (tabId === 'settings') renderSettings();
             if (tabId === 'invoice') updateInvoiceRoomOptions(); 
@@ -477,6 +561,71 @@
             lucide.createIcons();
         }
 
+        // --- RENDER STATISTICS ---
+        function renderStatistics() {
+            // Gom nhóm tất cả các tháng đã xuất hoá đơn
+            const monthsSet = new Set();
+            rooms.forEach(r => {
+                if(r.invoiceHistory) {
+                    r.invoiceHistory.forEach(inv => monthsSet.add(inv.month));
+                }
+            });
+
+            // Nếu không có lịch sử, thêm tháng hiện tại làm mặc định
+            if(monthsSet.size === 0) {
+                const d = new Date();
+                monthsSet.add(`${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`);
+            }
+
+            const months = Array.from(monthsSet).sort((a, b) => {
+                const [m1, y1] = a.split('/');
+                const [m2, y2] = b.split('/');
+                return new Date(y2, m2 - 1) - new Date(y1, m1 - 1); // Sort desc
+            });
+
+            const select = document.getElementById('stat-month-select');
+            select.innerHTML = months.map(m => `<option value="${m}">Tháng ${m}</option>`).join('');
+            
+            updateStatistics();
+        }
+
+        function updateStatistics() {
+            const selectedMonth = document.getElementById('stat-month-select').value;
+            let totalElec = 0;
+            let totalWater = 0;
+            let totalRevenue = 0;
+            let tableRows = '';
+
+            rooms.forEach(room => {
+                if(room.invoiceHistory) {
+                    const inv = room.invoiceHistory.find(i => i.month === selectedMonth);
+                    if(inv) {
+                        totalElec += inv.elecUsage;
+                        totalWater += inv.waterUsage;
+                        totalRevenue += inv.total;
+
+                        tableRows += `
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="py-3 px-6 font-medium text-slate-800">${room.name}</td>
+                                <td class="py-3 px-6 text-center text-orange-600 font-medium">${inv.elecUsage}</td>
+                                <td class="py-3 px-6 text-center text-blue-600 font-medium">${inv.waterUsage}</td>
+                                <td class="py-3 px-6 text-right font-bold text-slate-800">${formatCurrency(inv.total)}</td>
+                            </tr>
+                        `;
+                    }
+                }
+            });
+
+            if (!tableRows) {
+                tableRows = `<tr><td colspan="4" class="py-8 text-center text-slate-500 italic">Chưa có dữ liệu xuất hoá đơn trong tháng này.</td></tr>`;
+            }
+
+            document.getElementById('stat-total-elec').innerText = totalElec + ' kWh';
+            document.getElementById('stat-total-water').innerText = totalWater + ' đ.vị';
+            document.getElementById('stat-total-revenue').innerText = formatCurrency(totalRevenue);
+            document.getElementById('stat-table-body').innerHTML = tableRows;
+        }
+
         // --- RENDER TENANTS ---
         function renderTenants() {
             const container = document.getElementById('tenants-container');
@@ -496,7 +645,6 @@
                     </button>
                     
                     <div id="acc-tenant-${room.id}" class="accordion-content p-6 grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-200">
-                        <!-- Input mới: Ngày vào thuê -->
                         <div class="space-y-1">
                             <label class="text-sm font-medium text-slate-700">Ngày vào thuê</label>
                             <input type="date" value="${room.tenant.moveInDate}" oninput="updateTenant(${room.id}, 'moveInDate', this.value)" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"/>
@@ -681,6 +829,8 @@
         }
 
         function attachInvoiceListeners() {
+            document.getElementById('inv-month').addEventListener('change', calculateInvoice);
+
             ['inv-elec-prev', 'inv-elec-curr', 'inv-water-prev', 'inv-water-curr'].forEach(id => {
                 document.getElementById(id).addEventListener('input', (e) => {
                     if(id.includes('elec-prev')) readings.prevElec = parseInt(e.target.value)||0;
@@ -702,6 +852,16 @@
             const room = rooms.find(r => r.id === currentRoomId);
             const d = new Date();
             
+            // Xử lý kỳ thu
+            const monthInput = document.getElementById('inv-month').value;
+            let displayMonth = '';
+            if (monthInput) {
+                const parts = monthInput.split('-');
+                displayMonth = `${parts[1]}/${parts[0]}`;
+            } else {
+                displayMonth = `${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+            }
+
             // Cập nhật UI nhập liệu
             document.getElementById('inv-elec-price-badge').innerText = formatCurrency(room.settings.elecPrice) + '/kWh';
             document.getElementById('inv-water-price-badge').innerText = formatCurrency(room.settings.waterPrice) + (room.settings.waterType === 'meter' ? '/khối' : '/người');
@@ -737,8 +897,16 @@
             document.getElementById('inv-elec-usage').innerText = elecUsage;
             document.getElementById('inv-water-usage').innerText = waterUsage;
 
+            // Lưu vào cache để hàm IN gọi
+            window.currentInvoiceData = {
+                month: displayMonth,
+                elecUsage: elecUsage,
+                waterUsage: waterUsage,
+                total: total
+            };
+
             // --- CẬP NHẬT HOÁ ĐƠN IN ---
-            document.getElementById('rcpt-month').innerText = `${d.getMonth() + 1}/${d.getFullYear()}`;
+            document.getElementById('rcpt-month').innerText = displayMonth;
             document.getElementById('rcpt-date').innerText = d.toLocaleDateString('vi-VN');
             document.getElementById('rcpt-room-name').innerText = room.name;
             document.getElementById('rcpt-tenant-name').innerText = room.tenant.name || '.....................................';
@@ -778,18 +946,46 @@
         }
 
         function handlePrintInvoice() {
-            // Khi bấm In, tự động ghi chú phòng này vừa được xuất hoá đơn hôm nay
+            if(!window.currentInvoiceData) return;
+
             const room = rooms.find(r => r.id === currentRoomId);
             const d = new Date();
-            room.lastInvoiceDate = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+            const todayStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
             
-            // Tự động lưu lên Google Sheets (hoặc chỉ lưu local nếu không có mạng)
+            // 1. Cập nhật ngày xuất hoá đơn gần nhất
+            room.lastInvoiceDate = todayStr;
+
+            // 2. Lưu vào lịch sử hoá đơn để Thống Kê
+            if (!room.invoiceHistory) room.invoiceHistory = [];
+            const historyIdx = room.invoiceHistory.findIndex(inv => inv.month === window.currentInvoiceData.month);
+            
+            const invoiceRecord = {
+                date: todayStr,
+                month: window.currentInvoiceData.month,
+                elecUsage: window.currentInvoiceData.elecUsage,
+                waterUsage: window.currentInvoiceData.waterUsage,
+                total: window.currentInvoiceData.total
+            };
+
+            // Nếu đã từng xuất trong tháng này thì ghi đè, nếu chưa thì thêm mới
+            if (historyIdx >= 0) {
+                room.invoiceHistory[historyIdx] = invoiceRecord;
+            } else {
+                room.invoiceHistory.push(invoiceRecord);
+            }
+            
+            // Tự động lưu lên Google Sheets
             saveToSheets();
 
             window.print();
         }
 
         function initApp() {
+            // Set kỳ thu mặc định là tháng hiện tại
+            const d = new Date();
+            const defaultMonth = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+            document.getElementById('inv-month').value = defaultMonth;
+
             lucide.createIcons();
             attachInvoiceListeners();
             switchTab('overview'); // Mở Tổng quan làm tab mặc định
