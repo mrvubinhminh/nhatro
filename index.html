@@ -287,101 +287,79 @@
             </div>
 
             <!-- Khu vực Xem trước / Hoá đơn để Chụp ảnh/In (Cần gắn id='invoice-receipt') -->
-            <div id="invoice-receipt" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200 print:shadow-none print:border-none print:p-0 max-w-2xl mx-auto">
-                <div class="text-center mb-6">
-                    <h1 class="text-2xl font-bold text-slate-900 uppercase tracking-wide">Hoá Đơn Tiền Phòng</h1>
-                    <p class="text-slate-600 mt-1 font-medium">Kỳ thu: <span id="rcpt-month"></span></p>
+            <div id="invoice-receipt" class="bg-white p-5 rounded-xl shadow-lg border border-slate-200 print:shadow-none print:border-none print:p-0 max-w-sm mx-auto text-sm">
+                <div class="text-center mb-4">
+                    <h1 class="text-xl font-bold text-slate-900 uppercase tracking-wide">Hoá Đơn Tiền Phòng</h1>
+                    <p class="text-slate-600 mt-1 font-medium text-xs">Kỳ thu: <span id="rcpt-month"></span></p>
                 </div>
 
-                <div class="flex justify-between items-end border-b-2 border-slate-800 pb-3 mb-4">
+                <div class="flex justify-between items-end border-b-2 border-slate-800 pb-2 mb-3 text-xs">
                     <div>
-                        <h2 id="rcpt-room-name" class="text-xl font-bold text-slate-800">Phòng X</h2>
-                        <p class="text-slate-700 mt-1">Họ và tên: <span id="rcpt-tenant-name" class="font-semibold">.............................................</span></p>
+                        <h2 id="rcpt-room-name" class="text-lg font-bold text-slate-800">Phòng X</h2>
+                        <p class="text-slate-700 mt-1">Họ tên: <span id="rcpt-tenant-name" class="font-semibold">.............................................</span></p>
                     </div>
-                    <div class="text-right text-sm text-slate-600">
+                    <div class="text-right text-slate-600">
                         <p>Ngày xuất: <span id="rcpt-date"></span></p>
                     </div>
                 </div>
 
-                <div class="w-full mb-6">
-                    <table class="w-full text-left border-collapse text-sm sm:text-base">
+                <div class="w-full mb-4">
+                    <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="border-b border-slate-300">
-                                <th class="py-2 font-semibold text-slate-800">Nội dung</th>
-                                <th class="py-2 font-semibold text-slate-800 text-center">Số cũ</th>
-                                <th class="py-2 font-semibold text-slate-800 text-center">Số mới</th>
-                                <th class="py-2 font-semibold text-slate-800 text-center">Đã dùng</th>
-                                <th class="py-2 font-semibold text-slate-800 text-right hidden sm:table-cell">Đơn giá</th>
-                                <th class="py-2 font-semibold text-slate-800 text-right">Thành tiền</th>
+                            <tr class="border-b border-slate-300 text-xs">
+                                <th class="py-1 font-semibold text-slate-800">Dịch vụ</th>
+                                <th class="py-1 font-semibold text-slate-800 text-center">Số cũ</th>
+                                <th class="py-1 font-semibold text-slate-800 text-center">Số mới</th>
+                                <th class="py-1 font-semibold text-slate-800 text-center">Tiêu thụ</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100">
+                        <tbody class="divide-y divide-slate-100 text-xs">
                             <!-- Tiền phòng -->
                             <tr>
-                                <td class="py-3 font-medium text-slate-800">Tiền phòng</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-right text-slate-500 hidden sm:table-cell">-</td>
-                                <td id="rcpt-rent-cost" class="py-3 font-semibold text-slate-800 text-right">0 ₫</td>
+                                <td class="py-2 font-medium text-slate-800">Tiền phòng</td>
+                                <td class="py-2 text-center text-slate-500">-</td>
+                                <td class="py-2 text-center text-slate-500">-</td>
+                                <td class="py-2 text-center text-slate-500">-</td>
                             </tr>
                             <!-- Tiền điện -->
                             <tr>
-                                <td class="py-3 font-medium text-slate-800">Tiền điện</td>
-                                <td id="rcpt-elec-prev" class="py-3 text-center">0</td>
-                                <td id="rcpt-elec-curr" class="py-3 text-center">0</td>
-                                <td id="rcpt-elec-usage" class="py-3 text-center font-bold text-orange-600">0</td>
-                                <td id="rcpt-elec-price" class="py-3 text-right text-slate-600 hidden sm:table-cell">0 ₫</td>
-                                <td id="rcpt-elec-cost" class="py-3 font-semibold text-slate-800 text-right">0 ₫</td>
+                                <td class="py-2 font-medium text-slate-800">Tiền điện</td>
+                                <td id="rcpt-elec-prev" class="py-2 text-center">0</td>
+                                <td id="rcpt-elec-curr" class="py-2 text-center">0</td>
+                                <td id="rcpt-elec-usage" class="py-2 text-center font-bold text-orange-600">0</td>
                             </tr>
                             <!-- Tiền nước -->
                             <tr>
-                                <td class="py-3 font-medium text-slate-800">Tiền nước</td>
-                                <td id="rcpt-water-prev" class="py-3 text-center">0</td>
-                                <td id="rcpt-water-curr" class="py-3 text-center">0</td>
-                                <td id="rcpt-water-usage" class="py-3 text-center font-bold text-blue-600">0</td>
-                                <td id="rcpt-water-price" class="py-3 text-right text-slate-600 hidden sm:table-cell">0 ₫</td>
-                                <td id="rcpt-water-cost" class="py-3 font-semibold text-slate-800 text-right">0 ₫</td>
-                            </tr>
-                            <!-- Vệ sinh -->
-                            <tr id="row-garbage">
-                                <td class="py-3 font-medium text-slate-800">Phí vệ sinh an ninh</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-right text-slate-500 hidden sm:table-cell">-</td>
-                                <td id="rcpt-garbage-cost" class="py-3 font-semibold text-slate-800 text-right">0 ₫</td>
+                                <td class="py-2 font-medium text-slate-800">Tiền nước</td>
+                                <td id="rcpt-water-prev" class="py-2 text-center">0</td>
+                                <td id="rcpt-water-curr" class="py-2 text-center">0</td>
+                                <td id="rcpt-water-usage" class="py-2 text-center font-bold text-blue-600">0</td>
                             </tr>
                             <!-- Wifi -->
                             <tr id="row-wifi">
-                                <td class="py-3 font-medium text-slate-800">Phí wifi</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-right text-slate-500 hidden sm:table-cell">-</td>
-                                <td id="rcpt-wifi-cost" class="py-3 font-semibold text-slate-800 text-right">0 ₫</td>
+                                <td class="py-2 font-medium text-slate-800">Phí wifi</td>
+                                <td class="py-2 text-center text-slate-500">-</td>
+                                <td class="py-2 text-center text-slate-500">-</td>
+                                <td class="py-2 text-center text-slate-500">-</td>
                             </tr>
                             <!-- Khác -->
                             <tr id="row-other">
-                                <td class="py-3 font-medium text-slate-800">Phụ phí khác</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-center text-slate-500">-</td>
-                                <td class="py-3 text-right text-slate-500 hidden sm:table-cell">-</td>
-                                <td id="rcpt-other-cost" class="py-3 font-semibold text-slate-800 text-right">0 ₫</td>
+                                <td class="py-2 font-medium text-slate-800">Phụ phí khác</td>
+                                <td class="py-2 text-center text-slate-500">-</td>
+                                <td class="py-2 text-center text-slate-500">-</td>
+                                <td class="py-2 text-center text-slate-500">-</td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr class="border-t-2 border-slate-800 bg-slate-50">
-                                <td colspan="5" class="py-4 font-bold text-slate-900 text-lg sm:text-xl text-right pr-4 uppercase hidden sm:table-cell">Tổng cộng:</td>
-                                <td colspan="4" class="py-4 font-bold text-slate-900 text-lg text-right pr-4 uppercase sm:hidden">Tổng:</td>
-                                <td id="rcpt-total-cost" class="py-4 font-bold text-red-600 text-xl text-right">0 ₫</td>
+                                <td colspan="3" class="py-3 font-bold text-slate-900 text-sm text-right pr-3 uppercase">Tổng cộng:</td>
+                                <td id="rcpt-total-cost" class="py-3 font-bold text-red-600 text-base text-right">0 ₫</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
                 
-                <div class="mt-8 pt-4 border-t border-dashed border-slate-300 text-center text-lg text-slate-800 font-medium print:block">
+                <div class="mt-4 pt-3 border-t border-dashed border-slate-300 text-center text-xs text-slate-800 font-medium print:block">
                     Cám ơn quý khách. Vui lòng thanh toán trong vòng 3 ngày.
                 </div>
             </div>
@@ -957,36 +935,29 @@
             document.getElementById('rcpt-room-name').innerText = room.name;
             document.getElementById('rcpt-tenant-name').innerText = room.tenant.name || '.....................................';
 
-            document.getElementById('rcpt-rent-cost').innerText = formatCurrency(room.settings.rent);
-            
             // Điện
             document.getElementById('rcpt-elec-prev').innerText = readings.prevElec;
             document.getElementById('rcpt-elec-curr').innerText = readings.currElec;
             document.getElementById('rcpt-elec-usage').innerText = elecUsage;
-            document.getElementById('rcpt-elec-price').innerText = formatCurrency(room.settings.elecPrice);
-            document.getElementById('rcpt-elec-cost').innerText = formatCurrency(elecCost);
 
             // Nước
             document.getElementById('rcpt-water-prev').innerText = room.settings.waterType === 'meter' ? readings.prevWater : '-';
             document.getElementById('rcpt-water-curr').innerText = room.settings.waterType === 'meter' ? readings.currWater : '-';
             document.getElementById('rcpt-water-usage').innerText = waterUsage;
-            document.getElementById('rcpt-water-price').innerText = formatCurrency(room.settings.waterPrice);
-            document.getElementById('rcpt-water-cost').innerText = formatCurrency(waterCost);
 
             // Các khoản khác
-            const toggleRow = (rowId, costId, amount) => {
+            const toggleRow = (rowId, amount) => {
                 const row = document.getElementById(rowId);
                 if(amount > 0) {
                     row.classList.remove('hidden');
-                    document.getElementById(costId).innerText = formatCurrency(amount);
                 } else {
                     row.classList.add('hidden');
                 }
             };
 
-            toggleRow('row-garbage', 'rcpt-garbage-cost', room.settings.garbage);
-            toggleRow('row-wifi', 'rcpt-wifi-cost', wifiCost);
-            toggleRow('row-other', 'rcpt-other-cost', room.settings.other);
+            // Phí vệ sinh an ninh đã bị ẩn khỏi giao diện in theo yêu cầu, nhưng vẫn tính vào tổng
+            toggleRow('row-wifi', wifiCost);
+            toggleRow('row-other', room.settings.other);
 
             document.getElementById('rcpt-total-cost').innerText = formatCurrency(total);
         }
